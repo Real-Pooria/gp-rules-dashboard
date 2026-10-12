@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد حسابرسی و انطباق انتشار گوگل‌پلی (اکانت حقیقی)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff', 100: '#e0effe', 600: '#2563eb', 700: '#1d4ed8', 900: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 320px; max-height: 380px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        .tab-btn.active { border-bottom: 3px solid #2563eb; color: #2563eb; font-weight: 700; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 bg-slate-50">
+
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🛡️</span>
+                    <div>
+                        <h1 class="font-bold text-base sm:text-lg leading-tight">داشبورد حسابرسی و انطباق گوگل‌پلی</h1>
+                        <p class="text-xs text-slate-400">مهاجرت بازی مالتی‌پلیر آنلاین (اکانت حقیقی / قوانین ۲۰۲۵-۲۰۲۶)</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-4 bg-slate-800/80 px-4 py-2 rounded-lg border border-slate-700">
+                    <div class="text-left">
+                        <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">امتیاز آمادگی انتشار</div>
+                        <div class="text-lg font-extrabold text-emerald-400" id="headerReadinessScore" style="direction: ltr;">0%</div>
+                    </div>
+                    <div class="w-24 bg-slate-700 rounded-full h-3 overflow-hidden transform rotate-180">
+                        <div id="headerProgressBar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <div class="mb-6 bg-amber-50 border-r-4 border-amber-500 p-4 rounded-l-xl shadow-sm text-amber-900 text-sm">
+            <div class="flex items-start gap-3">
+                <span class="text-xl leading-none">⚠️</span>
+                <div>
+                    <strong class="font-semibold block text-amber-950">زمینه هدف: انتشار جهانی به عنوان شخص حقیقی (Individual)</strong>
+                    این ماتریس بر اساس محدودیت‌های اکانت شخصی تنظیم شده است. قوانین مرتبط با D-U-N-S حذف گردیده و الزام تست ۱۴ روزه بسته جایگزین شده است. همچنین ۴۸ تسک قطعی شامل چالش‌های ویس‌چت مامبل، فیچرهای اجباری کلاینت، تفکیک فنی زیرساخت، و حذف دامنه‌های .ir در این بوم گنجانده شده‌اند.
+                </div>
+            </div>
+        </div>
+
+        <div class="border-b border-slate-200 mb-6 bg-white rounded-t-xl px-4 shadow-sm flex overflow-x-auto gap-8">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn active py-4 px-2 text-sm font-medium text-slate-600 hover:text-blue-600 whitespace-nowrap">📊 داشبورد مدیریتی</button>
+            <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn py-4 px-2 text-sm font-medium text-slate-600 hover:text-blue-600 whitespace-nowrap">🔍 جستجوگر قوانین ممیزی</button>
+            <button onclick="switchTab('architecture')" id="tab-architecture" class="tab-btn py-4 px-2 text-sm font-medium text-slate-600 hover:text-blue-600 whitespace-nowrap">⚙️ معماری شبکه و زیرساخت</button>
+            <button onclick="switchTab('checklist')" id="tab-checklist" class="tab-btn py-4 px-2 text-sm font-medium text-slate-600 hover:text-blue-600 whitespace-nowrap">✅ چک‌لیست ۴۸ گانه تیم</button>
+        </div>
+
+        <div id="content-dashboard" class="tab-content space-y-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">خلاصه اجرایی و وضعیت انطباق اکانت حقیقی (شامل ویس‌چت و فیچرهای کلاینت)</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    انتشار این بازی نیازمند تاییدیه ۴۸ خط‌مشی قانونی، ساختاری و فنی است. با در نظر گرفتن ویس‌چت مامبل (Mumble)، پرمیشن‌های حساس میکروفون و فیچرهای اجباری رابط کاربری، تمامی موانع بالقوه ممیزی استخراج و در چک‌لیست زیر تجمیع شده‌اند.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <span class="text-xs font-semibold uppercase text-slate-400">کل موانع ممیزی</span>
+                    <div class="text-2xl font-black text-slate-900 mt-1">۴۸ قانون</div>
+                    <span class="text-xs text-slate-500">تفکیک‌شده در ۷ لایه اصلی</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm bg-rose-50/30">
+                    <span class="text-xs font-semibold uppercase text-rose-600">خطرات بن کامل اکانت</span>
+                    <div class="text-2xl font-black text-rose-700 mt-1">۱۶ مورد</div>
+                    <span class="text-xs text-rose-600">ریسک مسدودی دائم و تحریم</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
+                    <span class="text-xs font-semibold uppercase text-amber-700">خطرات ریجکت بیلد</span>
+                    <div class="text-2xl font-black text-amber-800 mt-1">۳۲ مورد</div>
+                    <span class="text-xs text-amber-700">رد شدن بیلد هنگام سابمیت</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm bg-blue-50/30">
+                    <span class="text-xs font-semibold uppercase text-blue-700">آزمون اولیه Closed Test</span>
+                    <div class="text-2xl font-black text-blue-800 mt-1">۱۴ روز پیوسته</div>
+                    <span class="text-xs text-blue-600">حداقل ۲۰ تستر فعال بافر شده</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-sm mb-1">توزیع شدت ریسک ۴۸ تسک</h3>
+                    <p class="text-xs text-slate-500 mb-4">تفکیک قوانین منجر به حذف اکانت یا رد شدن برنامه</p>
+                    <div class="chart-container"><canvas id="chartSeverity"></canvas></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-sm mb-1">آستانه‌های تحمل Android Vitals</h3>
+                    <p class="text-xs text-slate-500 mb-4">مرز اخطار الگوریتم گوگل در برابر هدف‌گذاری امن</p>
+                    <div class="chart-container"><canvas id="chartVitals"></canvas></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-sm mb-1">ساختار فایل‌ها در PAD</h3>
+                    <p class="text-xs text-slate-500 mb-4">جایگزین سیستم قدیمی OBB در بازی‌های حجیم</p>
+                    <div class="chart-container"><canvas id="chartPAD"></canvas></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-blue-400 transition-all">
+                    <div class="flex items-center gap-2 text-blue-600 font-bold mb-2 text-sm"><span>🎙️</span><span>ویس‌چت و میکروفون</span></div>
+                    <p class="text-xs text-slate-600">پاپ‌آپ صریح پیش از پرمیشن میکروفون، قطع سرویس در پس‌زمینه و رله ترافیک UDP مامبل.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-blue-400 transition-all">
+                    <div class="flex items-center gap-2 text-emerald-600 font-bold mb-2 text-sm"><span>⚡</span><span>معماری 16 KB Page</span></div>
+                    <p class="text-xs text-slate-600">استفاده اجباری از NDK r27 به بالا و فلگ تنظیم حافظه برای باینری‌های C/C++ در اندروید ۱۵ به بعد.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-blue-400 transition-all">
+                    <div class="flex items-center gap-2 text-purple-600 font-bold mb-2 text-sm"><span>🛍️</span><span>فیچرهای شاپ</span></div>
+                    <p class="text-xs text-slate-600">الزام دکمه «بازیابی خریدها (Restore)» و نمایش دقیق «درصد شانس آیتم‌ها» کنار گردونه‌ها.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-blue-400 transition-all">
+                    <div class="flex items-center gap-2 text-rose-600 font-bold mb-2 text-sm"><span>🌐</span><span>پاکسازی دامنه‌های ایران</span></div>
+                    <p class="text-xs text-slate-600">حذف تمام دامنه‌های .ir، دروازه‌های پرداخت شتاب و اتصال مستقیم به سرورهای مستقر در دیتاسنترهای داخلی.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-matrix" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">جستجوگر جامع سیاست‌ها و ممیزی (۴۸ تسک)</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    قوانین گوگل‌پلی را بر اساس دسته جستجو کنید. هر کارت نمایانگر متن دقیق خط‌مشی، مکانیزم تشخیص گوگل (ربات، بررسی انسانی، اسکن سورس) و ریسک جریمه آن است. روی دکمه بررسی تسک کلیک کنید تا راه‌حل عملیاتی باز شود.
+                </p>
+                
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="relative">
+                        <input type="text" id="searchInput" oninput="filterMatrix()" placeholder="🔍 جستجوی قوانین، کلمات کلیدی، API..." class="w-full pr-3 pl-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <select id="categoryFilter" onchange="filterMatrix()" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                            <option value="ALL">همه دسته‌ها (۷ لایه اصلی)</option>
+                            <option value="ACCOUNT">۱. اکانت حقیقی و احراز هویت</option>
+                            <option value="IRAN">۲. چالش‌های زیرساخت و تحریم‌ها</option>
+                            <option value="ASSETS">۳. دارایی‌ها، آرت و کپی‌رایت</option>
+                            <option value="UGC">۴. قوانین چت، ویس و محتوای کاربری</option>
+                            <option value="DATA">۵. حریم خصوصی و امنیت داده‌ها</option>
+                            <option value="BILLING">۶. درآمدزایی و پرداخت</option>
+                            <option value="TECH">۷. پیش‌نیازهای فنی و پرفورمنس</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="severityFilter" onchange="filterMatrix()" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                            <option value="ALL">تمام سطوح ریسک</option>
+                            <option value="TERMINATION">مسدود شدن کامل اکانت (بن دائم)</option>
+                            <option value="REJECTION">رد شدن بیلد اپلیکیشن (ریجکت)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="matrixContainer" class="space-y-4"></div>
+        </div>
+
+        <div id="content-architecture" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">مشخصات معماری شبکه و زیرساخت فنی</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    برای دور زدن تحریم‌ها و قبولی در تست‌های اتوماتیک گوگل در حین حفظ یک دیتابیس مشترک با کاربران مارکت‌های داخلی، باید لایه کلاینت گوگل‌پلی را ایزوله کنید. در ادامه ۳ دیاگرام متنی از مکانیزم‌های حیاتی نمایش داده شده است.
+                </p>
+            </div>
+
+            <!-- دیاگرام ۱ -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><span>🌐</span><span>معماری شبکه: Reverse Proxy و رله UDP صوتی</span></h3>
+                    <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full">ایزولاسیون تحریم‌ها</span>
+                </div>
+                <p class="text-xs text-slate-600 mb-6">جلوگیری از اتصال مستقیم کلاینت به سرور ایران، هدایت بسته‌های UDP مامبل، و باز گذاشتن دسترسی برای ربات‌های تست (PLR) گوگل آمریکا.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div class="space-y-3">
+                        <div class="font-semibold text-xs text-slate-400 uppercase tracking-wider">لایه کلاینت بازی</div>
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl shadow-sm text-right">
+                            <div class="font-bold text-blue-900 text-sm mb-1">نسخه گوگل‌پلی</div>
+                            <div class="text-xs text-blue-700">اتصال به دامنه‌های .com / .io</div>
+                        </div>
+                        <div class="bg-slate-100 border border-slate-300 p-4 rounded-xl shadow-sm text-right">
+                            <div class="font-bold text-slate-800 text-sm mb-1">نسخه داخلی (مایکت/بازار)</div>
+                            <div class="text-xs text-slate-600">اتصال مستقیم به شبکه‌های داخلی</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="font-semibold text-xs text-slate-400 uppercase tracking-wider">لایه Edge (فیلتر ترافیک)</div>
+                        <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl shadow-sm text-right h-full flex flex-col justify-center">
+                            <div class="font-bold text-purple-900 text-sm mb-1">پروکسی و رله بین‌المللی</div>
+                            <div class="text-xs text-purple-700 mb-2">سرور واسط فرانکفورت یا کلودفلر</div>
+                            <ul class="text-[11px] text-purple-800 space-y-1 list-disc pr-4">
+                                <li>رله ترافیک UDP مامبل</li>
+                                <li>پذیرش ترافیک ربات‌های گوگل</li>
+                                <li>حذف هدرهای افشاکننده ایران</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="font-semibold text-xs text-slate-400 uppercase tracking-wider">موتور بازی (بک‌اند)</div>
+                        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm text-right h-full flex flex-col justify-center">
+                            <div class="font-bold text-emerald-900 text-sm mb-1">دیتابیس مشترک مالتی‌پلیر</div>
+                            <div class="text-xs text-emerald-700 mb-2">سرور مستقر در ایران</div>
+                            <p class="text-[11px] text-emerald-800">مدیریت مچ‌میکینگ و چت بین کاربران نسخه گوگل و داخلی.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دیاگرام ۲ -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2"><span>⚡</span><span>روند بیلد باینری 16KB Page برای اندروید ۱۵</span></h3>
+                    <span class="text-xs font-semibold bg-rose-100 text-rose-800 px-2.5 py-1 rounded-full">الزام NDK جدید</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm text-right">
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                        <div class="font-bold text-slate-900 text-xs mb-1">۱. آپدیت Toolchain</div>
+                        <div class="text-xs text-slate-600">ارتقای نسخه NDK در فایل گریدل به <strong dir="ltr">r27+</strong></div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                        <div class="font-bold text-slate-900 text-xs mb-1">۲. تزریق Linker Flag</div>
+                        <div class="text-xs text-slate-600">افزودن دستور <span dir="ltr" class="text-[10px] bg-slate-200 px-1 rounded">-Wl,-z,max-page-size=16384</span> به تنظیمات C++</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                        <div class="font-bold text-slate-900 text-xs mb-1">۳. کامپایل باینری</div>
+                        <div class="text-xs text-slate-600">ساخت مجدد کدهای نیتیو <span dir="ltr">.so</span> برای معماری 64-بیتی</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                        <div class="font-bold text-slate-900 text-xs mb-1">۴. تست هدر فایل</div>
+                        <div class="text-xs text-slate-600">اجرای فرمان <span dir="ltr" class="text-[10px] bg-slate-200 px-1 rounded">readelf -h *.so</span> برای بررسی عدد خروجی</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دیاگرام ۳ -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2"><span>📦</span><span>ساختار تخصیص حجم در Play Asset Delivery</span></h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-slate-50 rounded-lg border-r-4 border-slate-700">
+                            <strong class="block text-slate-900 font-semibold">باندل اصلی AAB (زیر ۲۰۰ مگابایت)</strong> کدهای اجرایی، UI پایه و فایل‌های حیاتی.
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-lg border-r-4 border-blue-600">
+                            <strong class="block text-blue-900 font-semibold">محتوای Install-Time (تا ۱ گیگابایت)</strong> اسپرایت‌شیت‌های اصلی و تکسچرها.
+                        </div>
+                        <div class="p-3 bg-indigo-50 rounded-lg border-r-4 border-indigo-600">
+                            <strong class="block text-indigo-900 font-semibold">محتوای Fast-Follow / On-Demand</strong> مپ‌ها، صداها و اسکین‌های باکیفیت در پس‌زمینه.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2"><span>🔐</span><span>سیستم ورود سازگار با حریم خصوصی گوگل</span></h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-emerald-50 rounded-lg border-r-4 border-emerald-600">
+                            <strong class="block text-emerald-900 font-semibold">ورود دیفالت نسخه گوگل‌پلی</strong> استفاده از Play Games، ایمیل یا Guest.
+                        </div>
+                        <div class="p-3 bg-amber-50 rounded-lg border-r-4 border-amber-600">
+                            <strong class="block text-amber-900 font-semibold">استفاده از SMS Retriever API (در صورت نیاز)</strong> بدون دریافت مجوز خطرناک <span dir="ltr">READ_SMS</span>.
+                        </div>
+                        <div class="p-3 bg-purple-50 rounded-lg border-r-4 border-purple-600">
+                            <strong class="block text-purple-900 font-semibold">کد اتصال اکانت (Cross-Save)</strong> تولید کد موقت برای انتقال دیتا.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-checklist" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 mb-1">چک‌لیست تایید نهایی پیش از سابمیت (۴۸ گانه)</h2>
+                    <p class="text-sm text-slate-600">
+                        تسک‌های تکمیل شده توسط تیم توسعه را در اینجا تیک بزنید. پیشرفت شما مستقیماً در داشبورد محاسبه می‌شود (داده‌ها در مرورگر ذخیره می‌شوند).
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="resetChecklist()" class="px-3 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">🔄 ریست چک‌لیست</button>
+                    <button onclick="markAllCompleted()" class="px-3 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">✅ انجام همه</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 text-white p-5 rounded-xl shadow-sm flex items-center justify-between">
+                <div>
+                    <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">درصد انطباق کل پروژه</div>
+                    <div class="text-3xl font-extrabold text-emerald-400 mt-1 flex" id="checklistScore" style="direction: ltr;">0%</div>
+                    <div class="text-xs text-slate-300 mt-1" id="checklistCount">0 از 48 تسک انجام شده</div>
+                </div>
+                <div class="w-1/2 bg-slate-800 rounded-full h-4 overflow-hidden border border-slate-700 transform rotate-180">
+                    <div id="checklistProgressBar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse text-xs sm:text-sm">
+                        <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="py-3 px-4 w-12 text-center">وضعیت</th>
+                                <th class="py-3 px-4 w-28 text-left" dir="ltr">شناسه</th>
+                                <th class="py-3 px-4">تسک ممیزی / الزام گوگل</th>
+                                <th class="py-3 px-4 w-40">دسته‌بندی</th>
+                                <th class="py-3 px-4 w-32">سطح ریسک</th>
+                                <th class="py-3 px-4 w-36">نوع ممیزی گوگل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="checklistTableBody" class="divide-y divide-slate-200">
+                            <!-- JS تزریق می‌شود -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="ruleModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white max-w-2xl w-full rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-5 bg-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span id="modalCategoryBadge" class="px-2 py-0.5 text-[10px] font-bold rounded bg-blue-600">دسته‌بندی</span>
+                    <h3 id="modalTitle" class="font-bold text-base leading-tight">عنوان قانون</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700 text-right">
+                <div>
+                    <h4 class="font-bold text-slate-900 text-[11px] mb-1">شرح دقیق خط‌مشی گوگل</h4>
+                    <p id="modalRule" class="p-3 bg-slate-50 border border-slate-200 rounded-lg leading-relaxed"></p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-[11px] mb-1">مکانیزم تشخیص گوگل</h4>
+                        <span id="modalDetection" class="inline-block p-2 bg-blue-50 text-blue-900 font-semibold rounded border border-blue-200 w-full"></span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-[11px] mb-1">سطح ریسک تخلف</h4>
+                        <span id="modalSeverity" class="inline-block p-2 font-semibold rounded w-full"></span>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-[11px] mb-1">تسک‌ها و چک‌لیست اجرایی تیم</h4>
+                    <ul id="modalChecklist" class="space-y-1.5 list-disc pr-5 text-slate-600 leading-relaxed"></ul>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-100 border-t border-slate-200 text-left">
+                <button onclick="closeModal()" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800">بستن پنجره</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // دیتابیس کامل ۴۸ گانه قوانین (بر اساس اکانت حقیقی، مامبل، و فیچرهای UI)
+        const policyData = [
+            // 1. ACCOUNT
+            {
+                id: "ACC-01", category: "ACCOUNT", categoryName: "اکانت حقیقی و احراز هویت",
+                title: "تایید هویت حقیقی (Individual)",
+                rule: "اکانت‌های شخصی نیازی به ثبت شرکت (D-U-N-S) ندارند. احراز هویت باید با مدارک هویتی فردی معتبر متعلق به کشورهای مجاز انجام شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید با پاسپورت یا کارت ملی ایرانی ثبت‌نام کنید. حتماً باید مدرک اقامتیِ یک کشور تحریم‌نشده را بدهید تا هویت شما به عنوان یک فرد خارجی تایید شود.",
+                detection: "پردازش تصویر مدارک (Jumio/Veriff) و تطابق پاسپورت با چهره زنده", severity: "TERMINATION", severityLabel: "مسدود شدن ثبت‌نام / دائم",
+                checklist: [
+                    "ارائه پاسپورت یا کارت اقامت معتبر غیرایرانی.",
+                    "ارائه قبض خدماتی (آب/برق) یا صورت‌حساب بانکی به نام همان شخص در کشور مربوطه."
+                ]
+            },
+            {
+                id: "ACC-02", category: "ACCOUNT", categoryName: "اکانت حقیقی و احراز هویت",
+                title: "حساب بانکی و فرم مالیاتی",
+                rule: "صاحب اکانت شخصی باید حساب بانکی به نام خود جهت دریافت درآمدهای گوگل در همان کشور ثبت شده ارائه دهد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نمی‌توانید شماره حساب یک دوست، شرکت واسط یا صرافی را بدهید. اسم صاحب حساب بانکی باید دقیقاً با اسم پاسپورتی که در مرحله قبل دادید یکی باشد.",
+                detection: "واریز مقادیر خرد آزمایشی (Micro-deposits) و بررسی سوابق IBAN", severity: "TERMINATION", severityLabel: "فریز مالی و مسدودی",
+                checklist: [
+                    "افتتاح حساب بانکی شخصی در خارج از ایران به نام صاحب اکانت.",
+                    "تکمیل فرم مالیاتی W-8BEN (مخصوص اشخاص حقیقی غیرآمریکایی)."
+                ]
+            },
+            {
+                id: "ACC-03", category: "ACCOUNT", categoryName: "اکانت حقیقی و احراز هویت",
+                title: "آزمون بسته ۱۴ روزه (Closed Testing)",
+                rule: "الزام مختص اکانت‌های شخصی: بازی باید قبل از درخواست برای انتشار عمومی، یک دوره تست ۱۴ روزه پیوسته را با موفقیت پشت سر بگذارد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید بازی را مستقیماً منتشر کنید. باید حداقل ۲۰ نفر در خارج از کشور پیدا کنید که بازی شما را نصب کنند و ۱۴ روز پشت سر هم آن را تست کنند.",
+                detection: "تله‌متری گوگل‌پلی از دفعات اجرای بازی روی دستگاه تسترها", severity: "REJECTION", severityLabel: "عدم صدور مجوز انتشار",
+                checklist: [
+                    "جذب حداقل ۲۰ تستر واقعی (پیشنهاد: ۲۰ نفر) که ایمیلشان در کنسول ثبت شود.",
+                    "تسترها باید در طول ۱۴ روز به تناوب بازی را اجرا کنند و فیدبک دهند.",
+                    "پر کردن دقیق پرسشنامه بازخوردها پس از پایان روز چهاردهم در کنسول."
+                ]
+            },
+            {
+                id: "ACC-04", category: "ACCOUNT", categoryName: "اکانت حقیقی و احراز هویت",
+                title: "تحریم‌های منطقه‌ای (OFAC)",
+                rule: "بر اساس قوانین تحریمی آمریکا، انتشار نرم‌افزار برای کاربران داخل مناطق تحت تحریم جامع (مانند ایران) ممنوع است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید در پنل گوگل، تیک کشور «ایران» را برای انتشار روشن بگذارید و نباید هیچ لینک مستقیمی به درگاه‌های ریالی ایران در بازی باشد.",
+                detection: "فنس‌کشی IP و اسکن متادیتای بازی", severity: "TERMINATION", severityLabel: "حذف فوری و بن اکانت",
+                checklist: [
+                    "در پنل کنسول بخش Countries/regions، تیک ایران را بردارید.",
+                    "قطع هرگونه لینک‌دهی یا ترافیک رسمی به درگاه‌های پرداخت شتاب ایران."
+                ]
+            },
+            {
+                id: "ACC-05", category: "ACCOUNT", categoryName: "اکانت حقیقی و احراز هویت",
+                title: "آدرس عمومی توسعه‌دهنده",
+                rule: "اکانت‌های دارای پرداخت درون‌برنامه‌ای باید آدرس فیزیکی معتبری را در صفحه استور نمایش دهند که با کشور محل سکونت و حساب بانکی تطابق داشته باشد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید آدرس ایران یا یک آدرس جعلی در کشوری دیگر را ثبت کنید. باید یک آدرس پستی واقعی در همان کشوری که پاسپورتش را دادید بنویسید تا همه کاربران جهان آن را در استور ببینند.",
+                detection: "تطابق سیستمی آدرس وارد شده با مدارک هویتی و بانکی", severity: "TERMINATION", severityLabel: "بن دائم اکانت",
+                checklist: [
+                    "تهیه آدرس فیزیکی یا صندوق پستی (PO Box) واقعی در کشور ثبت‌نامی.",
+                    "درج آدرس در بخش Developer Page کنسول گوگل‌پلی."
+                ]
+            },
+            {
+                id: "ACC-06", category: "ACCOUNT", categoryName: "اکانت حقیقی و احراز هویت",
+                title: "ردپای ارتباط اکانت‌ها (لاگین کنسول)",
+                rule: "ورود به کنسول از طریق IP ایران، VPSهای اشتراکی شناخته‌شده، یا مرورگری با سابقه لاگین جیمیل ایرانی، باعث شناسایی هویت اصلی و بن شدن می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> حتی برای یک ثانیه هم نباید با آی‌پی ایران یا با مرورگری که قبلاً جیمیل ایرانی‌تان در آن باز بوده وارد پنل دولوپر گوگل شوید. گوگل با این ردپاها هویت اصلی را شناسایی می‌کند.",
+                detection: "نشت WebRTC، کوکی‌ها و تحلیل IP زمان لاگین", severity: "TERMINATION", severityLabel: "بن دائم اکانت",
+                checklist: [
+                    "خرید VPS یا RDP اختصاصی از کشور محل ثبت‌نام.",
+                    "استفاده از مرورگر کاملاً ایزوله (بدون سابقه لاگین هیچ جیمیلی) برای ورود به کنسول."
+                ]
+            },
+            {
+                id: "ACC-07", category: "ACCOUNT", categoryName: "اکانت حقیقی و احراز هویت",
+                title: "شماره تماس احراز هویت (سیم‌کارت فیزیکی)",
+                rule: "استفاده از شماره‌های مجازی (VoIP مثل TextNow) برای ثبت‌نام و تایید دو مرحله‌ای (2FA) ممنوع است و باعث تعلیق می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> برای گرفتن پیامکِ ورود گوگل، نباید از شماره‌های مجازی و ارزان اینترنتی استفاده کنید. این شماره‌ها توسط گوگل به عنوان شماره‌های اسپم و نامعتبر شناسایی می‌شوند.",
+                detection: "استعلام HLR و بررسی اپراتورهای مخابراتی", severity: "TERMINATION", severityLabel: "مسدود شدن ثبت‌نام",
+                checklist: [
+                    "تهیه سیم‌کارت فیزیکی معتبر از کشور مقصد برای دریافت پیامک‌های گوگل."
+                ]
+            },
+
+            // 2. IRAN INFRASTRUCTURE
+            {
+                id: "IRN-01", category: "IRAN", categoryName: "چالش‌های زیرساخت و تحریم",
+                title: "پاکسازی کامل دامنه‌های .ir",
+                rule: "وجود هرگونه آدرس .ir در کدها، فایل‌های تنظیم شبکه یا بخش پشتیبانی، باعث حساسیت ربات‌های تحریم و مسدودی اپلیکیشن می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید هیچ آدرس اینترنتی در کدهای بازی شما به .ir ختم شود. ربات گوگل با دیدن پسوند ir. بلافاصله می‌فهمد بازی متصل به زیرساخت ایران است.",
+                detection: "جستجوی متنی در کدهای کامپایل شده (DEX) و فایل‌های XML", severity: "TERMINATION", severityLabel: "بن دائم اکانت",
+                checklist: [
+                    "حذف تمام پسوندهای .ir از network_security_config.xml.",
+                    "تنظیم APIها و لینک دانلود پچ‌ها روی دامنه‌های بین‌المللی مثل .com یا .io.",
+                    "استفاده از ایمیل پشتیبانی بین‌المللی در کنسول."
+                ]
+            },
+            {
+                id: "IRN-02", category: "IRAN", categoryName: "چالش‌های زیرساخت و تحریم",
+                title: "مخفی‌سازی IP سرورهای ایران (Reverse Proxy)",
+                rule: "ترافیک کاربران بین‌المللی نباید مستقیماً به دیتاسنترهای داخل ایران (آی‌پی‌های داخلی) برخورد کند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> اگر سرور اصلی بازی شما در دیتاسنترهای تهران است، نباید آی‌پی آن را مستقیماً داخل کدهای بازی قرار دهید، زیرا در زمان تست اتصال با IP آمریکا با مشکل مواجه می‌شود.",
+                detection: "ردیابی Traceroute کلاینت در زمان تست‌های دوره‌ای", severity: "REJECTION", severityLabel: "مشکل لودینگ و قطع اتصال",
+                checklist: [
+                    "راه‌اندازی یک نود میانی پروکسی (مثل Cloudflare Enterprise یا سروری در فرانکفورت).",
+                    "ارتباط بک‌اند مالتی‌پلیر را از طریق بستر خصوصی بین پروکسی و سرور ایران امن کنید."
+                ]
+            },
+            {
+                id: "IRN-03", category: "IRAN", categoryName: "چالش‌های زیرساخت و تحریم",
+                title: "مسیریابی ترافیک UDP مامبل (Murmur)",
+                rule: "ارسال بسته‌های UDP صدای بازیکنان به سرور مستقر در ایران به دلیل فیلترینگ دوطرفه و پکت‌لاس بالا، در تست‌های آمریکا باعث کرش بازی می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید سرور پردازش صدای بازی را داخل ایران بگذارید، چون اینترنت ایران برای ویس‌چت اختلال دارد و صدای بازی در تست‌های ربات گوگل گیر کرده و ارور می‌دهد.",
+                detection: "تایم‌اوت شبکه ویس در بات‌های تست Cloud و فایربیس", severity: "REJECTION", severityLabel: "ریجکت بیلد (نقص فنی)",
+                checklist: [
+                    "مسیریابی ترافیک صوتی Mumble از طریق سرور رله خارجی (ترکیه/اروپا).",
+                    "تضمین پایداری ارتباط صوتی برای IPهای خارجی."
+                ]
+            },
+            {
+                id: "IRN-04", category: "IRAN", categoryName: "چالش‌های زیرساخت و تحریم",
+                title: "دسترسی ربات‌های تست (Pre-Launch Reports)",
+                rule: "ربات‌های تست اتوماتیک گوگل از آمریکا متصل می‌شوند. فایروال نباید جلوی ورود آن‌ها به بازی و منوها را بگیرد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> سرور شما نباید آی‌پی‌های آمریکا (که متعلق به ربات‌های تست گوگل هستند) را بلاک کند، وگرنه ربات در صفحه ورود بازی گیر می‌کند و بازی رد می‌شود.",
+                detection: "گزارش‌های ویدئویی تسترهای Firebase Test Lab", severity: "REJECTION", severityLabel: "رد شدن به دلیل گیر کردن بازی",
+                checklist: [
+                    "باز گذاشتن فایروال پروکسی برای رنج IPهای کلود گوگل و AWS.",
+                    "قرار دادن یوزر و پسورد یک اکانت تست معتبر در بخش App Access کنسول."
+                ]
+            },
+            {
+                id: "IRN-05", category: "IRAN", categoryName: "چالش‌های زیرساخت و تحریم",
+                title: "ایزوله‌سازی کلید امضا و پکیج‌نیم",
+                rule: "استفاده از پکیج‌نیم یا Keystore که قبلاً در مارکت‌های ایرانی (مثل بازار یا مایکت) استفاده شده، باعث افشای هویت ایرانی توسعه‌دهنده می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید بازی را با همان اسم پکیج (مثلاً com.your.game) و کلید رمزی که قبلاً در کافه‌بازار منتشر کرده‌اید، به گوگل بدهید. خزنده‌های گوگل سوابق ریالی شما را در وب پیدا می‌کنند.",
+                detection: "خزنده‌های گوگل در وب فارسی و تطابق هش Keystore", severity: "TERMINATION", severityLabel: "بن دائم اکانت",
+                checklist: [
+                    "تغییر پکیج‌نیم (Package Name) اختصاصی برای نسخه گوگل‌پلی.",
+                    "ساخت یک Keystore کاملاً جدید و مجزا برای امضای باندل AAB."
+                ]
+            },
+            {
+                id: "IRN-06", category: "IRAN", categoryName: "چالش‌های زیرساخت و تحریم",
+                title: "پاکسازی SDKهای تحلیل و مارکتینگ ایرانی",
+                rule: "وجود کدهای مربوط به سرویس‌های ایرانی (تپسل، متریکس، پوشه و...) حتی اگر غیرفعال باشند، باعث مسدودی می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید هیچ‌کدام از ابزارهای تبلیغات یا آمارگیری ایرانی داخل کدهای بازی بمانند. کامنت کردن کدها فایده ندارد و گوگل نام این شرکت‌های تحریم‌شده را در کدهای نهایی تشخیص می‌دهد.",
+                detection: "اسکن متنی فایل‌های کامپایل‌شده (DEX) توسط ربات", severity: "TERMINATION", severityLabel: "بن دائم اکانت",
+                checklist: [
+                    "حذف کامل کتابخانه‌ها و SDKهای ایرانی از فایل build.gradle.",
+                    "اطمینان از عدم وجود کدهای کامنت‌شده (Dead code) سرویس‌های ایرانی."
+                ]
+            },
+
+            // 3. ASSETS
+            {
+                id: "AST-01", category: "ASSETS", categoryName: "دارایی‌ها، آرت و کپی‌رایت",
+                title: "دارایی‌های گرافیکی و صوتی بدون لایسنس",
+                rule: "استفاده از اسکین‌های فیلم‌ها، انیمه‌ها، سوپرهیروها (مثل بتمن/ددپول) یا صداهای متعلق به دیگران اکیداً ممنوع است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> حق ندارید از شخصیت‌های معروف سینمایی یا آهنگ‌هایی که لایسنس آن را نخریده‌اید در بازی استفاده کنید، زیرا گوگل فوراً به دلیل نقض کپی‌رایت اخطار می‌دهد.",
+                detection: "هشینگ تصویر (pHash) و تشخیص الگو (Cloud Vision)", severity: "TERMINATION", severityLabel: "اخطار کپی‌رایت (Strike)",
+                checklist: [
+                    "حذف قطعی یا بازطراحی تمام کاراکترها و اسکین‌های کپی‌رایت‌دار مارکت‌های داخلی.",
+                    "تعویض افکت‌های صوتی (SFX) با موسیقی‌های لایسنس‌دار."
+                ]
+            },
+            {
+                id: "AST-02", category: "ASSETS", categoryName: "دارایی‌ها، آرت و کپی‌رایت",
+                title: "اسکن استاتیک نام فایل‌ها و AAB",
+                rule: "فایل‌های درون باندل (پوشه‌ها، نام فایل‌های PNG) نباید شامل اسامی ثبت شده تجاری باشند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نام فایل‌هایی که داخل پوشه بازی می‌گذارید نباید تداعی‌کننده برندهای معروف باشد (مثلاً نباید فایلی به اسم batman-skin.png داشته باشید).",
+                detection: "اسکن متنی کدها در زمان پردازش فایل آپلودی در کنسول", severity: "REJECTION", severityLabel: "رد شدن آپلود AAB",
+                checklist: [
+                    "تغییر نام فایل‌ها (مثلاً از batman_skin.png به tier3_skin.png).",
+                    "حذف متادیتای EXIF (نام نویسنده/منبع) از تکسچرها و عکس‌ها."
+                ]
+            },
+            {
+                id: "AST-03", category: "ASSETS", categoryName: "دارایی‌ها، آرت و کپی‌رایت",
+                title: "همگام‌سازی اسکین‌ها در مالتی‌پلیر",
+                rule: "بازیکنان نسخه گوگل‌پلی نباید در حین بازی، مدل‌ها و فایل‌های کپی‌رایت‌دار بازیکنان نسخه‌های داخلی (کافه‌بازار/مایکت) را دانلود یا رندر کنند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید اجازه دهید کاربران گوگل‌پلی در محیط بازی آنلاین، اسکین‌های غیرمجاز کاربرانی که از ایران وارد شده‌اند را روی صفحه گوشی خود ببینند.",
+                detection: "بات‌های رکوردر صفحه نمایش در حین تست مالتی‌پلیر", severity: "TERMINATION", severityLabel: "اخطار فریبکاری / تعلیق",
+                checklist: [
+                    "توسعه سیستم Map کردن اسکین در سرور: رندر کردن اسکین «دیفالت» برای کلاینت گوگل‌پلی، وقتی رقیب او اسکین غیرمجاز دارد."
+                ]
+            },
+            {
+                id: "AST-04", category: "ASSETS", categoryName: "دارایی‌ها، آرت و کپی‌رایت",
+                title: "متادیتای صفحه استور و اسکرین‌شات‌ها",
+                rule: "تصاویر فروشگاه باید گیم‌پلی واقعی را نشان دهند. قاب گوشی آیفون/سامسونگ یا ادعاهای دروغین ممنوع است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید عکس‌های تبلیغاتی الکی و اغراق‌آمیز برای استور بسازید، و نباید نوشته‌هایی مثل 'بهترین بازی سال' روی عکس‌های استور بنویسید.",
+                detection: "پردازش تصویر OCR روی محتوای آپلودی استور", severity: "REJECTION", severityLabel: "رد شدن تغییرات استور",
+                checklist: [
+                    "استفاده از نمای واقعی Top-Down بازی برای اسکرین‌شات‌ها.",
+                    "عدم استفاده از برچسب‌هایی مثل 'بهترین بازی' در تصاویر."
+                ]
+            },
+
+            // 4. UGC & VOICE
+            {
+                id: "UGC-01", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "دکمه ریپورت چت متنی",
+                rule: "بازی‌های دارای چت زنده آنلاین موظفند ابزار گزارش دادن بازیکن مزاحم را تعبیه کنند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید فضای چت را بدون کنترل رها کنید. حتماً باید دکمه‌ای وجود داشته باشد که کاربران بتوانند فرد فحاش یا مزاحم را گزارش دهند.",
+                detection: "تست ناظران انسانی گوگل و بات‌های UI", severity: "REJECTION", severityLabel: "ریجکت بازی",
+                checklist: [
+                    "دکمه ریپورت در کنار پیام یا آواتار بازیکن با حداکثر ۲ کلیک در دسترس باشد.",
+                    "گزینه‌های توهین، هرزنامه، محتوای غیراخلاقی در منوی ریپورت وجود داشته باشد."
+                ]
+            },
+            {
+                id: "UGC-02", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "دکمه بلاک/میوت چت متنی",
+                rule: "کاربر باید بتواند فوراً پیام‌های یک شخص مزاحم خاص را مسدود کند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید کاربر را مجبور کنید تا پیام‌های فرد مزاحم را تحمل کند؛ باید دکمه‌ای برای مسدودسازی (Block) سریع اشخاص وجود داشته باشد.",
+                detection: "تست انسانی در لابی‌های بازی", severity: "REJECTION", severityLabel: "ریجکت بازی",
+                checklist: [
+                    "قابلیت Block/Mute با یک کلیک برای پنهان شدن آنی چت‌های فرد مزاحم پیاده‌سازی شود."
+                ]
+            },
+            {
+                id: "UGC-03", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "فیلترینگ خودکار متنی (پایش پروکتیو)",
+                rule: "سیستم چت باید پیش از ارسال، کلمات توهین‌آمیز و آدرس‌های اینترنتی مخرب را فیلتر کند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید اجازه دهید کاربران آزادانه هر کلمه رکیک یا هر آدرس سایتی را در چت تایپ کنند؛ سیستم باید خودکار آن‌ها را سانسور یا ستاره‌دار کند.",
+                detection: "ارسال متون تست توسط ربات‌ها در محیط چت", severity: "REJECTION", severityLabel: "تعلیق اپلیکیشن",
+                checklist: [
+                    "ستاره‌دار کردن کلمات رکیک (Regex Filter) در کلاینت.",
+                    "مسدودسازی کامل ارسال لینک سایت و IP در محیط چت."
+                ]
+            },
+            {
+                id: "UGC-04", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "توافق‌نامه رفتار (EULA)",
+                rule: "کاربر پیش از دسترسی به قابلیت‌های اجتماعی و چت، باید صراحتاً قوانین ممنوعیت توهین را بپذیرد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید بدون گرفتن تاییدیه اولیه، به بازیکن اجازه چت کردن بدهید؛ اول باید یک پنجره قوانین به او نشان دهید تا تیک موافقت را بزند.",
+                detection: "بررسی فرآیند ورود و Onboarding کاربر", severity: "REJECTION", severityLabel: "ریجکت بازی",
+                checklist: [
+                    "طراحی یک کادر تیک‌دار در ورود اولیه برای پذیرش قوانین جامعه.",
+                    "تعبیه صفحه متنی قوانین در منوی تنظیمات بازی."
+                ]
+            },
+            {
+                id: "UGC-05", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "کنترل‌های رابط کاربری ویس‌چت (Mumble)",
+                rule: "بر اساس قوانین UGC، فضای صوتی مالتی‌پلیر باید کنترل‌های شفاف و واضح برای حفظ امنیت کاربر داشته باشد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید محیط ویس‌چت گنگ باشد. کاربر باید از روی آیکون‌ها دقیقاً بداند چه کسی در حال صحبت است و بتواند فوراً صدای محیط را قطع کند.",
+                detection: "تست کنترل‌های صوتی در محیط مینی‌گیم‌ها توسط اپروور گوگل", severity: "REJECTION", severityLabel: "ریجکت بیلد",
+                checklist: [
+                    "افزودن دکمه قطع صدای فوری (Mute) در پنجره تعامل با هر بازیکن در فضای بازی ۲بعدی.",
+                    "تعبیه دکمه 'ناشنوایی کامل (Deafen)' در گوشه تصویر جهت بستن کامل صدای تمام بازیکنان اطراف.",
+                    "ایجاد نشانگر صوتی (آیکون میکروفون بالای سر کاراکتر هنگام صحبت کردن) جهت شفاف‌سازی منبع صدا."
+                ]
+            },
+            {
+                id: "UGC-06", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "افشای صریح پرمیشن میکروفون (Prominent Disclosure)",
+                rule: "نمایش ناگهانی پاپ‌آپ دسترسی به میکروفون اندروید ممنوع است. کاربر باید بداند چرا میکروفون فعال می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید بی‌مقدمه از سیستم‌عامل گوشی اجازه میکروفون بخواهید! باید قبل از آن در یک پیغام درون‌برنامه‌ای به کاربر توضیح دهید که چرا به میکروفون نیاز دارید.",
+                detection: "بررسی لحظه فراخوانی API ضبط صدا در سورس کد و رفتار اپلیکیشن", severity: "REJECTION", severityLabel: "رد شدن فوری بیلد",
+                checklist: [
+                    "درخواست پرمیشن RECORD_AUDIO را به لحظه لمس دکمه میکروفون یا ورود به اتاق ویس منتقل کنید.",
+                    "پیاده‌سازی پاپ‌آپ پیش‌نیاز اختصاصی (Prominent Disclosure Modal) قبل از فراخوانی مجوز اندروید.",
+                    "توضیح روشن به کاربر که صدا فقط برای گفت‌وگوی زنده با بازیکنان حاضر در بازی استفاده می‌شود."
+                ]
+            },
+            {
+                id: "UGC-07", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "میکروفون در پس‌زمینه (الزامات اندروید ۱۴)",
+                rule: "اگر کاربر بازی را Minimize کند و میکروفون همچنان فعال بماند، بازی بدافزار شنود (Spyware) تلقی می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> اگر کاربر از بازی بیرون رفت (اما بازی در پس‌زمینه باز ماند)، به هیچ وجه نباید میکروفون روشن بماند؛ این کار جاسوسی تلقی می‌شود.",
+                detection: "آنالیز رفتاری اپلیکیشن در پس‌زمینه و چک کردن FOREGROUND_SERVICE_MICROPHONE", severity: "TERMINATION", severityLabel: "بن دائم به جرم Spyware",
+                checklist: [
+                    "به محض Minimize شدن (رفتن بازی به پس‌زمینه)، ارسال صدای کاربر در مامبل فوراً قطع (Mute) شود.",
+                    "در صورت نیاز به شنیدن صدا در پس‌زمینه، سرویس اندروید با تایپ microphone صریحاً تعریف گردد."
+                ]
+            },
+            {
+                id: "UGC-08", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "حریم خصوصی چت و لاگ‌ها",
+                rule: "متون و لاگ‌های چت داده شخصی هستند و نباید به آیدی دستگاه (IMEI) گره بخورند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید پیام‌هایی که کاربر می‌فرستد را در سرورتان به شماره سریال فیزیکی گوشی‌اش وصل کنید. این کار نقض خطرناک حریم خصوصی است.",
+                detection: "اسکن شبکه برای پکت‌های ارسالی حامل شناسه سخت‌افزار", severity: "REJECTION", severityLabel: "اخطار ایمنی دیتا",
+                checklist: [
+                    "فیلد شناسه دستگاه از دیتابیس پیام‌ها جدا شده و به اکانت UUID متصل شود.",
+                    "ترافیک چت و لاگین با پروتکل TLS 1.3 رمزنگاری شود."
+                ]
+            },
+            {
+                id: "UGC-09", category: "UGC", categoryName: "چت، ویس و محتوای کاربری",
+                title: "مکانیزم جریمه خودکار ویس‌چت",
+                rule: "نادیده گرفتن ریپورت‌های صوتی نقض قوانین است. باید سیستمی برای محرومیت خودکار (Mute) در صورت دریافت حجم مشخصی از ریپورت‌ها پیاده‌سازی شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید ریپورت‌های ویس‌چت را بی‌تأثیر و تزئینی رها کنید! اگر چند نفر صدای کسی را ریپورت کردند، سیستم باید به صورت خودکار صدای او را تا مدتی قطع کند.",
+                detection: "بررسی انسانی اکشن‌های پس از ریپورت و تست بات‌ها", severity: "REJECTION", severityLabel: "ریجکت بیلد",
+                checklist: [
+                    "پیاده‌سازی بن خودکار (مثلاً پس از ۵ ریپورت یونیک در ۲۴ ساعت) برای ویس‌چت.",
+                    "ثبت این مکانیزم برخورد با متخلف در توافق‌نامه رفتار (EULA)."
+                ]
+            },
+
+            // 5. DATA
+            {
+                id: "DAT-01", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "غربالگری سنی خنثی (Age Gate ۱۳+)",
+                rule: "چون بازی دارای چت آزاد و ویس است و طراحی کارتونی دارد، برای اثبات هدف‌گذاری بالای ۱۳ سال و معافیت از قوانین صیانت کودکان (COPPA)، باید سن کاربر در ابتدا پرسیده شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید به کاربران زیر ۱۳ سال اجازه استفاده از چت و ویس را بدهید. حتماً در شروع بازی باید فرم تعیین سن نمایش داده شود.",
+                detection: "تست جریان Onboarding توسط تیم بازبین خانوادگی گوگل", severity: "REJECTION", severityLabel: "ریجکت بازی / تعلیق",
+                checklist: [
+                    "در اولین لود، کادری بدون سن پیش‌فرض با عنوان 'سن خود را وارد کنید' طراحی شود.",
+                    "برای کاربران زیر ۱۳ سال امکان چت متنی آزاد و ویس بسته شود.",
+                    "در فرم IARC کنسول، رده سنی هدف ۱۳ به بالا انتخاب گردد."
+                ]
+            },
+            {
+                id: "DAT-02", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "حذف حساب کاربری درون بازی",
+                rule: "اگر قابلیت ساخت اکانت وجود دارد، دکمه‌ای برای حذف دائمی اکانت و دیتای کاربر باید در اپلیکیشن تعبیه شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید کاربر را در بازی حبس کنید. اگر اکانت می‌سازد، حتماً باید دکمه مشخصی برای پاک کردن همیشگی حسابش داشته باشد.",
+                detection: "تست منوی تنظیمات توسط ممیز انسانی", severity: "REJECTION", severityLabel: "حذف از جستجوی استور",
+                checklist: [
+                    "قرار دادن دکمه واضح 'حذف اکانت (Delete Account)' در منوی Setting."
+                ]
+            },
+            {
+                id: "DAT-03", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "لینک وب‌سایت برای حذف حساب",
+                rule: "کاربر باید بتواند بدون نصب بودن بازی و از طریق وب، درخواست حذف اطلاعاتش را ثبت کند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید پاک کردن اکانت را فقط محدود به داخل بازی کنید. کاربر باید بتواند از طریق مرورگر اینترنت هم درخواست حذف اطلاعاتش را بدهد.",
+                detection: "خزنده‌های اعتبارسنجی لینک گوگل در فرم Data Safety", severity: "REJECTION", severityLabel: "ریجکت بیلد",
+                checklist: [
+                    "ساخت یک فرم امن (HTTPS) روی وب‌سایت استودیو برای درج درخواست حذف با شناسه بازیکن.",
+                    "ثبت این لینک در بخش Data Deletion کنسول."
+                ]
+            },
+            {
+                id: "DAT-04", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "اظهارنامه فرم Data Safety",
+                rule: "رفتار واقعی کلاینت بازی و تمام SDKها باید دقیقاً منطبق با فرم پر شده در کنسول باشد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید در فرم امنیت دیتای گوگل‌پلی دروغ بگویید یا پنهان‌کاری کنید. اگر بازی اطلاعات خاصی از گوشی می‌گیرد، باید دقیقاً در فرم تیک زده شود.",
+                detection: "اسکن سورس‌کد و ترافیک خروجی SDKهای شخص ثالث", severity: "REJECTION", severityLabel: "اخطار فریبکاری",
+                checklist: [
+                    "جمع‌آوری لاگ کرش‌ها و شناسه‌های فایربیس (FCM ID) در فرم تیک زده شود.",
+                    "رمزنگاری ترافیک در ترانزیت (TLS) رسماً در فرم تایید شود."
+                ]
+            },
+            {
+                id: "DAT-05", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "لینک حریم خصوصی درون‌بازی",
+                rule: "قراردادن لینک Privacy Policy صرفاً در صفحه استور کافی نیست؛ کاربر باید از داخل بازی نیز به آن دسترسی داشته باشد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید قوانین حریم خصوصی را فقط در استور رها کنید. در خود منوی بازی هم باید دکمه‌ای برای خواندن این قوانین وجود داشته باشد.",
+                detection: "تست دستی منوهای بازی", severity: "REJECTION", severityLabel: "ریجکت اپلیکیشن",
+                checklist: [
+                    "افزودن دکمه 'سیاست حریم خصوصی' در بخش تنظیمات یا پشتیبانی که مرورگر را باز کند."
+                ]
+            },
+            {
+                id: "DAT-06", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "پرمیشن خواندن پیامک (READ_SMS)",
+                rule: "دسترسی مستقیم به پیامک‌های کاربر ممنوع است. سیستم احراز هویت باید از روش‌های نوین استفاده کند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> برای کارهای لاگین، به هیچ عنوان نباید از کاربر دسترسی به خواندن تمام پیامک‌های شخصی‌اش را بخواهید.",
+                detection: "اسکن استاتیک فایل مانیفست برای تگ‌های ممنوعه", severity: "REJECTION", severityLabel: "خطای آپلود باندل",
+                checklist: [
+                    "حذف کامل `android.permission.READ_SMS` از مانیفست و پلاگین‌های ایرانی قدیمی.",
+                    "استفاده از SMS Retriever API با هش ۱۱ کاراکتری (در صورت الزام لاگین پیامکی)."
+                ]
+            },
+            {
+                id: "DAT-07", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "زمان‌بندی درخواست پرمیشن اعلان‌ها (FCM)",
+                rule: "در اندروید ۱۳+، باز شدن ناگهانی پاپ‌آپ درخواست اجازه پوش‌نوتیفیکیشن (`POST_NOTIFICATIONS`) در ثانیه اول اجرای بازی ممنوع است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید در ثانیه اول باز شدن بازی، با درخواست اجازه برای ارسال نوتیفیکیشن کاربر را کلافه کنید؛ این کار باید به تاخیر بیفتد.",
+                detection: "تست Cold Start اپلیکیشن در فایربیس تست‌لب", severity: "REJECTION", severityLabel: "ریجکت به دلیل UX ضعیف",
+                checklist: [
+                    "درخواست پرمیشن نوتیفیکیشن فایربیس و سیستم لوکال را به بعد از اتمام بخش آموزشی (Tutorial) یا در منوی تنظیمات موکول کنید."
+                ]
+            },
+            {
+                id: "DAT-08", category: "DATA", categoryName: "حریم خصوصی و داده",
+                title: "پرمیشن‌های ذخیره‌سازی (Storage)",
+                rule: "گرفتن دسترسی کلی به کل فایل‌های گوشی کاربر (WRITE_EXTERNAL_STORAGE) در اندرویدهای جدید ممنوع و سبب رد بیلد است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید از کاربر بخواهید که به کل گالری و فایل‌های شخصی او دسترسی داشته باشید. بازی فقط باید در پوشه خودش دیتا ذخیره کند.",
+                detection: "بررسی تگ‌های مانیفست و مسیرهای ذخیره‌سازی (API)", severity: "REJECTION", severityLabel: "ریجکت آپلود",
+                checklist: [
+                    "حذف پرمیشن دسترسی به حافظه.",
+                    "ذخیره دیتای بازی در فضای اختصاصی برنامه (Scoped Storage)."
+                ]
+            },
+
+            // 6. BILLING
+            {
+                id: "BIL-01", category: "BILLING", categoryName: "درآمدزایی و پرداخت",
+                title: "الزام انحصاری سیستم پرداخت Google Play Billing",
+                rule: "تمامی آیتم‌های دیجیتال، ارز بازی، اسکین و خریدهای درون‌برنامه‌ای باید انحصاراً از درگاه گوگل فروخته شوند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید هیچ درگاه پرداخت ایرانی (مثل کافه‌بازار یا زرین‌پال) در کدهای نسخه گوگل‌پلی باقی مانده باشد.",
+                detection: "اسکن باینری برای یافتن SDKهای ایرانی و بررسی فروشگاه", severity: "TERMINATION", severityLabel: "بن دائم اکانت (دور زدن گوگل)",
+                checklist: [
+                    "ادغام نسخه v6 یا v7 از Google Play Billing Library.",
+                    "حذف کامل کدهای SDK بازار، مایکت و درگاه‌های شتاب از بیلد ارسالی به گوگل."
+                ]
+            },
+            {
+                id: "BIL-02", category: "BILLING", categoryName: "درآمدزایی و پرداخت",
+                title: "قانون Anti-Steering (ارجاع به سایت)",
+                rule: "وجود هرگونه متن، بنر یا ارجاعی که به کاربر بگوید 'برای خرید ارزان‌تر به سایت ما بروید' تخلف است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید به کاربر بگویید که برای خرید ارزان‌تر، درگاه گوگل‌پلی را دور بزند و از سایت خودتان خرید کند.",
+                detection: "ربات‌های خزنده‌ی متن درون کد بازی و بررسی لینک‌های WebView", severity: "TERMINATION", severityLabel: "بن دائم / تعلیق",
+                checklist: [
+                    "حذف تمام بنرهای ارجاع‌دهنده به خرید ریالی از داخل بازی و پوش‌نوتیفیکیشن‌ها.",
+                    "جلوگیری از لود شدن صفحه شاپ سایت در WebView بازی."
+                ]
+            },
+            {
+                id: "BIL-03", category: "BILLING", categoryName: "درآمدزایی و پرداخت",
+                title: "کلوکینگ و کد مخرب (Cloaking / DCL)",
+                rule: "لود کردن کدهای اجرایی از اینترنت، و همچنین تغییر ماهیت درگاه‌ها در زمان ممیزی توسط ریموت‌کانفیگ، بدافزار تلقی می‌شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید کد مخفی بنویسید که مثلاً اگر کاربر ایرانی بود درگاه بازار باز شود و اگر ناظر گوگل (از خارج) بود درگاه گوگل‌پلی! گوگل این پنهان‌کاری را بدافزار می‌داند.",
+                detection: "آنالیز دینامیک حافظه RAM و ردیابی DexClassLoader", severity: "TERMINATION", severityLabel: "بن دائم (بدافزار)",
+                checklist: [
+                    "جلوگیری از پنهان‌سازی درگاه ایرانی با Remote Config بر اساس IP."
+                ]
+            },
+            {
+                id: "BIL-04", category: "BILLING", categoryName: "درآمدزایی و پرداخت",
+                title: "دکمه بازیابی خرید (Restore Purchases)",
+                rule: "کاربر باید بتواند اسکین‌ها و آیتم‌های دائمی و غیرمصرفی خود را پس از نصب مجدد اپلیکیشن بازیابی کند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید خریدهای کاربر را بعد از پاک کردن و نصب دوباره بازی از بین ببرید. باید دکمه‌ای برای بازیابی خریدهای قبلی داشته باشید.",
+                detection: "تست انسانی و جستجوی تابع queryPurchasesAsync در شاپ", severity: "REJECTION", severityLabel: "ریجکت اپلیکیشن",
+                checklist: [
+                    "تعبیه دکمه 'بازیابی خریدها' در بخش فروشگاه یا تنظیمات بازی."
+                ]
+            },
+            {
+                id: "BIL-05", category: "BILLING", categoryName: "درآمدزایی و پرداخت",
+                title: "شفافیت درصد شانس لوت‌باکس (Odds)",
+                rule: "خریدهایی که ماهیت جعبه شانس یا گردونه دارند، باید درصد دقیق شانس دریافت هر آیتم را پیش از خرید نمایش دهند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید درصد برنده شدن در گردونه شانس را از کاربر پنهان کنید. کاربر باید دقیقاً بداند شانس برنده شدن هر آیتم چقدر است.",
+                detection: "بررسی رابط کاربری فروشگاه بازی توسط اپروور گوگل", severity: "REJECTION", severityLabel: "ریجکت بازی",
+                checklist: [
+                    "تعبیه آیکون (i) کنار گردونه‌ها و نمایش جدول شفاف درصد شانس (مثلاً طلایی: ۲٪، نقره‌ای ۸٪)."
+                ]
+            },
+            {
+                id: "BIL-06", category: "BILLING", categoryName: "درآمدزایی و پرداخت",
+                title: "قانون اسپم در سیستم دعوت (Referral)",
+                rule: "پرداخت پاداش درون بازی در ازای دعوت دوست مجاز است، اما پاداش دادن در ازای 'ثبت نظر ۵ ستاره در گوگل‌پلی' اکیداً ممنوع است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید در ازای دادن سکه یا جایزه به کاربر، از او بخواهید که برود و در استور گوگل به بازی شما ۵ ستاره بدهد.",
+                detection: "اسکن متون بازی و ردیابی کلمات مرتبط با Rating", severity: "TERMINATION", severityLabel: "اخطار دستکاری نظرات (Strike)",
+                checklist: [
+                    "حذف هرگونه دکمه 'به ما ۵ ستاره بده و الماس بگیر'.",
+                    "عدم استفاده از دامنه‌های .ir در لینک‌های دعوت ارسالی به شبکه‌های اجتماعی."
+                ]
+            },
+
+            // 7. TECH
+            {
+                id: "TCH-01", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "سطح پیش‌نیاز Target API 36",
+                rule: "تمامی بیلدها و آپدیت‌های جدید موظف به هدف‌گذاری روی اندروید ۱۶ (API 36) در سال ۲۰۲۶ هستند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید خروجی بازی را روی استانداردهای قدیمی اندروید تنظیم کنید، وگرنه گوگل اصلاً اجازه آپلود فایل را نمی‌دهد.",
+                detection: "اعتبارسنجی خودکار فایل مانیفست و گریدل", severity: "REJECTION", severityLabel: "عدم اجازه آپلود AAB",
+                checklist: [
+                    "تنظیم `targetSdk = 36` و `compileSdk = 36`.",
+                    "آپدیت توابع منسوخ شده به کتابخانه‌های مدرن AndroidX."
+                ]
+            },
+            {
+                id: "TCH-02", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "معماری ۶۴ بیتی (arm64-v8a)",
+                rule: "بازی‌ها باید به صورت ۶۴ بیتی روی دستگاه‌های اندرویدی اجرا شوند و کدهای ۳۲ بیتی دیگر منسوخ شده‌اند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید فایل نهایی بازی را فقط برای معماری پردازنده‌های قدیمی (۳۲ بیتی) خروجی بگیرید.",
+                detection: "آنالیز هدر باینری‌های کتابخانه‌های C/C++ درون پکیج", severity: "REJECTION", severityLabel: "خطای پردازش بیلد",
+                checklist: [
+                    "اطمینان از کامپایل شدن تمام پلاگین‌ها و لایبرری‌های بازی برای arm64."
+                ]
+            },
+            {
+                id: "TCH-03", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "تخصیص حافظه 16KB Page Size",
+                rule: "الزام اندروید ۱۵: صفحات حافظه باینری‌های نیتیو باید با سایز ۱۶ کیلوبایت تراز (Align) شوند.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید تنظیمات قدیمی حافظه را نگه دارید؛ در گوشی‌های جدید مدل پر کردن رم تغییر کرده و برنامه‌نویس نباید فراموش کند این فلگ را اضافه کند.",
+                detection: "بررسی هدر فایل‌های ELF با دستور readelf -h", severity: "REJECTION", severityLabel: "رد شدن آپلود AAB",
+                checklist: [
+                    "ارتقای ابزار NDK به نسخه r27 یا بالاتر.",
+                    "تزریق دستور `-Wl,-z,max-page-size=16384` به تنظیمات لینکر پروژه."
+                ]
+            },
+            {
+                id: "TCH-04", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "محدودیت حجم (Play Asset Delivery)",
+                rule: "حجم فایل پایه بازی (Base AAB) نباید بیش از ۲۰۰ مگابایت باشد و استخراج فایل‌های OBB ممنوع است.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید حجم اولیه بازی موقع دانلود خیلی بزرگ باشد و نباید دیتاها را با سیستم منسوخ‌شده‌ی OBB دانلود کنید.",
+                detection: "بررسی خودکار حجم بسته هنگام سابمیت کنسول", severity: "REJECTION", severityLabel: "خطای سایز بسته نصبی",
+                checklist: [
+                    "استفاده از سیستم Play Asset Delivery (PAD).",
+                    "تفکیک اسپرایت‌ها و صداها به پکیج‌های Install-time و On-demand."
+                ]
+            },
+            {
+                id: "TCH-05", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "آستانه پایداری سیستم (Android Vitals)",
+                rule: "نرخ کرش و عدم پاسخگویی (ANR) نباید از آستانه‌های بحرانی ۱.۰۹٪ و ۰.۴۷٪ بالاتر برود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید بازی پر از باگ باشد. اگر بازی روی گوشی مردم زیاد هنگ کند و ببندد، گوگل آن را از استور مخفی می‌کند.",
+                detection: "تله‌متری خودکار ماهانه از گوشی کاربران", severity: "REJECTION", severityLabel: "افت رتبه و اخطار فروشگاه",
+                checklist: [
+                    "خارج کردن عملیات سنگین لود مپ‌ها و دیتابیس از Main Thread.",
+                    "تست حافظه در دیوایس‌های ضعیف برای جلوگیری از خطای LMK."
+                ]
+            },
+            {
+                id: "TCH-06", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "پاپ‌آپ قطعی ارتباط (Graceful Reconnection)",
+                rule: "هنگام قطعی شبکه در بازی آنلاین، برنامه نباید روی صفحه لودینگ فریز شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید وقتی اینترنت کاربر قطع می‌شود، بازی را روی صفحه لودینگ قفل یا کرش کنید؛ باید پیام خطای مشخصی بدهید.",
+                detection: "تست اختلال شبکه توسط ربات‌های فایربیس تست‌لب", severity: "REJECTION", severityLabel: "خطای ANR و ریجکت",
+                checklist: [
+                    "نمایش دیالوگ استاندارد 'تلاش مجدد / خروج' در زمان قطعی سوکت اتصال سرور."
+                ]
+            },
+            {
+                id: "TCH-07", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "پشتیبانی از دکمه Back فیزیکی گوشی",
+                rule: "فشردن دکمه یا جسچر بازگشت گوشی نباید باعث کرش بازی، خروج ناگهانی، یا نادیده گرفته شدن فرمان شود.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید با زدن دکمه بک (بازگشت) گوشی، بازی یک‌دفعه کامل بسته شود! اول باید منوهایی که باز هستند بسته شوند.",
+                detection: "تست Back Navigation در منوها توسط ربات و انسان", severity: "REJECTION", severityLabel: "ریجکت UX",
+                checklist: [
+                    "بسته شدن پنل‌های UI (شاپ، چت، اینونتوری) با زدن دکمه Back.",
+                    "نمایش پاپ‌آپ 'آیا می‌خواهید خارج شوید؟' هنگام زدن دکمه Back در لابی اصلی."
+                ]
+            },
+            {
+                id: "TCH-08", category: "TECH", categoryName: "پیش‌نیازهای فنی و پرفورمنس",
+                title: "مدیریت فوکوس صدا (Audio Focus)",
+                rule: "صداهای بازی (خصوصاً موسیقی پس‌زمینه) نباید پخش موسیقی کاربر از دیگر اپلیکیشن‌ها (مثل اسپاتیفای) را مختل کنند مگر آنکه کاربر بخواهد.<br><br><span class='text-blue-700 font-bold'>به زبان ساده یعنی:</span> نباید وقتی بازیکن در حال گوش دادن به آهنگ است و بازی را باز می‌کند، آهنگ او را به زور قطع کنید.",
+                detection: "تست همزمان پخش مدیا در حین باز کردن اپلیکیشن", severity: "REJECTION", severityLabel: "اخطار کیفیت ساخت هسته",
+                checklist: [
+                    "تعبیه تاگل‌های مجزا برای موسیقی (BGM) و افکت‌ها (SFX) در تنظیمات.",
+                    "رهاسازی فوکوس صوتی سیستم‌عامل در صورت میوت کردن موسیقی داخل بازی."
+                ]
+            }
+        ];
+
+        let completedChecklistItems = new Set(JSON.parse(localStorage.getItem('gplay_audit_48_fa') || '[]'));
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            if (tabId === 'dashboard') renderCharts();
+        }
+
+        function renderMatrixCards(items) {
+            const container = document.getElementById('matrixContainer');
+            container.innerHTML = '';
+            if (items.length === 0) {
+                container.innerHTML = `<div class="bg-white p-8 text-center rounded-xl border border-slate-200 text-slate-500"><span class="text-3xl block mb-2">🔍</span>آیتمی مطابق با فیلتر شما یافت نشد.</div>`;
+                return;
+            }
+            items.forEach(item => {
+                const isTerm = item.severity === 'TERMINATION';
+                const severityBadge = isTerm ? '<span class="px-2.5 py-1 text-[10px] font-extrabold uppercase rounded bg-rose-100 text-rose-800 border border-rose-200">مسدودی کامل اکانت</span>' : '<span class="px-2.5 py-1 text-[10px] font-extrabold uppercase rounded bg-amber-100 text-amber-800 border border-amber-200">ریجکت اپلیکیشن</span>';
+                const card = document.createElement('div');
+                card.className = 'bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-blue-400 transition-all text-right flex flex-col justify-between';
+                card.innerHTML = `<div><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3"><div class="flex items-center gap-2"><span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-slate-100 text-slate-700 border border-slate-200">${item.id}</span><span class="text-xs font-semibold text-slate-500">${item.categoryName}</span></div><div>${severityBadge}</div></div><h3 class="font-bold text-slate-900 text-base mb-2 leading-tight">${item.title}</h3><p class="text-xs text-slate-600 mb-4 leading-relaxed">${item.rule}</p></div><div class="flex items-center justify-between pt-3 border-t border-slate-100 mt-auto"><div class="text-[11px] text-slate-500"><strong>تشخیص:</strong> ${item.detection.split(' و ')[0]}</div><button onclick="openModal('${item.id}')" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">بررسی تسک تیم &larr;</button></div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function filterMatrix() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const severity = document.getElementById('severityFilter').value;
+            const filtered = policyData.filter(item => {
+                const matchesQuery = item.title.toLowerCase().includes(query) || item.rule.toLowerCase().includes(query) || item.id.toLowerCase().includes(query) || item.checklist.some(c => c.toLowerCase().includes(query));
+                const matchesCategory = (category === 'ALL') || (item.category === category);
+                const matchesSeverity = (severity === 'ALL') || (item.severity === severity);
+                return matchesQuery && matchesCategory && matchesSeverity;
+            });
+            renderMatrixCards(filtered);
+        }
+
+        function openModal(id) {
+            const item = policyData.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('modalCategoryBadge').innerText = item.categoryName;
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalRule').innerHTML = item.rule; // changed to innerHTML to render bold texts
+            document.getElementById('modalDetection').innerText = item.detection;
+            const sevEl = document.getElementById('modalSeverity');
+            sevEl.innerText = item.severityLabel;
+            if (item.severity === 'TERMINATION') sevEl.className = 'inline-block p-2 bg-rose-100 text-rose-900 font-bold rounded border border-rose-300 w-full';
+            else sevEl.className = 'inline-block p-2 bg-amber-100 text-amber-900 font-bold rounded border border-amber-300 w-full';
+            const listEl = document.getElementById('modalChecklist');
+            listEl.innerHTML = '';
+            item.checklist.forEach(c => { const li = document.createElement('li'); li.innerText = c; listEl.appendChild(li); });
+            document.getElementById('ruleModal').classList.remove('hidden');
+            document.getElementById('ruleModal').classList.add('flex');
+        }
+
+        function closeModal() { document.getElementById('ruleModal').classList.add('hidden'); document.getElementById('ruleModal').classList.remove('flex'); }
+
+        function renderChecklistTable() {
+            const tbody = document.getElementById('checklistTableBody');
+            tbody.innerHTML = '';
+            policyData.forEach(item => {
+                const isChecked = completedChecklistItems.has(item.id);
+                const tr = document.createElement('tr');
+                tr.className = isChecked ? 'bg-emerald-50/40 hover:bg-emerald-50/80 transition-colors' : 'hover:bg-slate-50 transition-colors';
+                const isTerm = item.severity === 'TERMINATION';
+                const riskBadge = isTerm ? '<span class="text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded">بن دائم</span>' : '<span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">ریجکت بیلد</span>';
+                tr.innerHTML = `<td class="py-3 px-4 text-center"><input type="checkbox" onchange="toggleCheckitem('${item.id}')" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"></td><td class="py-3 px-4 font-mono font-bold text-slate-700 text-xs text-left" dir="ltr">${item.id}</td><td class="py-3 px-4"><div class="font-bold text-slate-900 text-xs sm:text-sm mb-1">${item.title}</div><div class="text-[11px] text-slate-500 leading-relaxed">${item.checklist[0]}</div></td><td class="py-3 px-4 text-xs font-semibold text-slate-600">${item.categoryName}</td><td class="py-3 px-4">${riskBadge}</td><td class="py-3 px-4 text-[11px] text-slate-500 leading-tight">${item.detection.split(' و ')[0]}</td>`;
+                tbody.appendChild(tr);
+            });
+            updateScorecard();
+        }
+
+        function toggleCheckitem(id) {
+            if (completedChecklistItems.has(id)) completedChecklistItems.delete(id); else completedChecklistItems.add(id);
+            localStorage.setItem('gplay_audit_48_fa', JSON.stringify([...completedChecklistItems]));
+            renderChecklistTable();
+        }
+
+        function resetChecklist() {
+            if (confirm('آیا مطمئن هستید که می‌خواهید تمام ۴۸ تیک تایید را پاک کنید؟')) {
+                completedChecklistItems.clear(); localStorage.removeItem('gplay_audit_48_fa'); renderChecklistTable();
+            }
+        }
+
+        function markAllCompleted() {
+            policyData.forEach(x => completedChecklistItems.add(x.id));
+            localStorage.setItem('gplay_audit_48_fa', JSON.stringify([...completedChecklistItems]));
+            renderChecklistTable();
+        }
+
+        function updateScorecard() {
+            const total = policyData.length;
+            const count = completedChecklistItems.size;
+            const percentage = Math.round((count / total) * 100) || 0;
+            document.getElementById('headerReadinessScore').innerText = `${percentage}%`;
+            document.getElementById('headerProgressBar').style.width = `${percentage}%`;
+            document.getElementById('checklistScore').innerText = `${percentage}%`;
+            document.getElementById('checklistProgressBar').style.width = `${percentage}%`;
+            document.getElementById('checklistCount').innerText = `${count} از ${total} تسک تکمیل شده`;
+        }
+
+        let chartsInitialized = false;
+        function renderCharts() {
+            if (chartsInitialized) return;
+            chartsInitialized = true;
+            Chart.defaults.font.family = "'Vazirmatn', sans-serif";
+            const ctxSeverity = document.getElementById('chartSeverity').getContext('2d');
+            new Chart(ctxSeverity, {
+                type: 'doughnut',
+                data: { labels: ['مسدودی کامل اکانت', 'رد شدن آپلود و بیلد'], datasets: [{ data: [16, 32], backgroundColor: ['#e11d48', '#f59e0b'], borderWidth: 2, borderColor: '#ffffff' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } } }
+            });
+            const ctxVitals = document.getElementById('chartVitals').getContext('2d');
+            new Chart(ctxVitals, {
+                type: 'bar',
+                data: { labels: ['کرش کلی', 'کرش دستگاه', 'فریز کلی (ANR)', 'فریز دستگاه'], datasets: [{ label: 'مرز خطر (اخطار گوگل)', data: [1.09, 8.00, 0.47, 8.00], backgroundColor: '#ef4444' }, { label: 'کف پایداری پیشنهادی', data: [0.50, 2.00, 0.20, 2.00], backgroundColor: '#10b981' }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: value => value + '%' } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } } }
+            });
+            const ctxPAD = document.getElementById('chartPAD').getContext('2d');
+            new Chart(ctxPAD, {
+                type: 'pie',
+                data: { labels: ['باندل AAB (زیر ۲۰۰ مگ)', 'پک Install-Time', 'است‌های Fast-Follow', 'فایل‌های On-Demand'], datasets: [{ data: [200, 1000, 500, 800], backgroundColor: ['#1e293b', '#2563eb', '#6366f1', '#a855f7'], borderWidth: 2, borderColor: '#ffffff' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } } }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMatrixCards(policyData); renderChecklistTable(); renderCharts();
+        });
+    </script>
+</body>
+</html>
